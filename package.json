@@ -1,24 +1,33 @@
 {
   "name": "smart-json-formatter",
-  "displayName": "smart-json-formatter",
-  "description": "Fractal JSON formatting",
-  "version": "0.0.1",
+  "displayName": "Smart JSON Formatter",
+  "description": "Fractal JSON formatting: Compacts simple lists, expands complex objects.",
+  "version": "1.0.0",
+  "publisher": "deiividramirez",  
+  "icon": "icon.png",
   "engines": {
-    "vscode": "^1.108.1"
+    "vscode": "^1.108.0"
   },
   "categories": [
-    "Other"
+    "Formatters"
   ],
-  "activationEvents": [],
-  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onLanguage:json",
+    "onLanguage:jsonc"
+  ],
   "contributes": {
-    "commands": [
+    "languages": [
       {
-        "command": "smart-json-formatter.helloWorld",
-        "title": "Hello World"
+        "id": "json",
+        "extensions": [".json"]
       }
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deiividramirez/smart-json-formatter"
+  },
+  "main": "./dist/extension.js",
   "scripts": {
     "vscode:prepublish": "npm run package",
     "compile": "npm run check-types && npm run lint && node esbuild.js",
