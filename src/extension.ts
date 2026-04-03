@@ -22,17 +22,30 @@ export function activate(context: vscode.ExtensionContext) {
 
 function format(document: vscode.TextDocument, context: vscode.ExtensionContext): vscode.TextEdit[] {
     const text = document.getText();
-    
+
     // Path to your bundled python script
     const scriptPath = context.asAbsolutePath(path.join('python', 'smart_json.py'));
 
 	// CHANGE 'python3' TO 'python' IF ON WINDOWS
 	const command = process.platform === 'win32' ? 'python' : 'python3';
 
+    const cfg = vscode.workspace.getConfiguration('smartJsonFormatter');
+    const args = [
+        scriptPath,
+        '--max-width', String(cfg.get<number>('maxWidth', 120)),
+        '--indent', String(cfg.get<number>('indent', 2)),
+    ];
+    if (cfg.get<boolean>('sortKeysAlphabetically', true)) {
+        args.push('--sort-keys');
+    }
+    if (cfg.get<boolean>('stripComments', true)) {
+        args.push('--strip-comments');
+    }
+
     try {
         // Spawn python process
         // Ensure 'python3' is in your PATH, or make this configurable via settings
-        const process = cp.spawnSync(command, [scriptPath], {
+        const process = cp.spawnSync(command, args, {
             input: text,
             encoding: 'utf-8'
         });

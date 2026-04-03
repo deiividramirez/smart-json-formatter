@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 import re
@@ -10,9 +11,10 @@ class SmartJSONEncoder:
     over whitespace and recursive indentation logic.
     """
 
-    def __init__(self, indent=2, max_width=120):
+    def __init__(self, indent=2, max_width=120, sort_keys=True):
         self.indent_step = indent
         self.max_width = max_width
+        self.sort_keys = sort_keys
 
     def encode(self, obj):
         return self._format(obj, 0)
@@ -45,12 +47,12 @@ class SmartJSONEncoder:
             body = ",\n".join(f"{next_indent_str}{item}" for item in expanded_items)
             return f"[\n{body}\n{current_indent_str}]"
 
-        # 4. Handle Dictionaries (keys sorted alphabetically)
+        # 4. Handle Dictionaries
         if isinstance(obj, dict):
             if not obj:
                 return "{}"
 
-            sorted_items = sorted(obj.items(), key=lambda x: x[0])
+            sorted_items = sorted(obj.items(), key=lambda x: x[0]) if self.sort_keys else list(obj.items())
 
             # Attempt to format as a single compact line
             compact_pairs = [
@@ -96,20 +98,28 @@ def strip_comments(text):
 
 # --- MAIN EXECUTION ---
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--max-width", type=int, default=120)
+    parser.add_argument("--indent", type=int, default=2)
+    parser.add_argument("--sort-keys", action="store_true", default=False)
+    parser.add_argument("--strip-comments", action="store_true", default=False)
+    args = parser.parse_args()
+
     try:
         # 1. Read Input
         input_data = sys.stdin.read()
         if not input_data.strip():
             sys.exit(0)
 
-        # 2. Clean Comments (This allows the class to work without error)
-        clean_data = strip_comments(input_data)
+        # 2. Optionally strip comments
+        if args.strip_comments:
+            input_data = strip_comments(input_data)
 
         # 3. Parse JSON
-        data = json.loads(clean_data)
+        data = json.loads(input_data)
 
         # 4. Format using your class
-        encoder = SmartJSONEncoder(max_width=120)
+        encoder = SmartJSONEncoder(indent=args.indent, max_width=args.max_width, sort_keys=args.sort_keys)
         formatted = encoder.encode(data)
         print(formatted, end="")
 

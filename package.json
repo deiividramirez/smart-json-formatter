@@ -23,7 +23,35 @@
           ".json"
         ]
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Smart JSON Formatter",
+      "properties": {
+        "smartJsonFormatter.sortKeysAlphabetically": {
+          "type": "boolean",
+          "default": true,
+          "description": "Sort object keys alphabetically when formatting."
+        },
+        "smartJsonFormatter.maxWidth": {
+          "type": "number",
+          "default": 120,
+          "minimum": 40,
+          "description": "Maximum line width before expanding an object or array to multiple lines."
+        },
+        "smartJsonFormatter.indent": {
+          "type": "number",
+          "default": 2,
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Number of spaces used for each indentation level."
+        },
+        "smartJsonFormatter.stripComments": {
+          "type": "boolean",
+          "default": true,
+          "description": "Strip // and /* */ comments before parsing. When false, a file with comments will produce an error instead of silently removing them."
+        }
+      }
+    }
   },
   "repository": {
     "type": "git",

@@ -18,8 +18,8 @@ pass() { echo -e "  ${GREEN}✓${NC} $1"; PASS=$((PASS + 1)); }
 fail() { echo -e "  ${RED}✗${NC} $1"; FAIL=$((FAIL + 1)); }
 section() { echo -e "\n${BOLD}$1${NC}"; }
 
-# Run the python formatter and return stdout
-fmt() { echo "$1" | python3 "$PYTHON"; }
+# Run the python formatter with the same defaults the VS Code extension uses
+fmt() { echo "$1" | python3 "$PYTHON" --sort-keys --strip-comments; }
 
 # Assert formatted output equals expected (ignoring leading/trailing whitespace)
 assert_eq() {
