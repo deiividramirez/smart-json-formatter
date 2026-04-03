@@ -21,7 +21,7 @@ class SmartJSONEncoder:
         """Recursively format the object."""
         # 1. Handle Primitives (Strings, Numbers, Bools, None)
         if isinstance(obj, (str, int, float, bool, type(None))):
-            return json.dumps(obj)
+            return json.dumps(obj, ensure_ascii=False)
 
         # 2. Prepare indentation strings
         current_indent_str = " " * (level * self.indent_step)
@@ -45,14 +45,16 @@ class SmartJSONEncoder:
             body = ",\n".join(f"{next_indent_str}{item}" for item in expanded_items)
             return f"[\n{body}\n{current_indent_str}]"
 
-        # 4. Handle Dictionaries
+        # 4. Handle Dictionaries (keys sorted alphabetically)
         if isinstance(obj, dict):
             if not obj:
                 return "{}"
 
+            sorted_items = sorted(obj.items(), key=lambda x: x[0])
+
             # Attempt to format as a single compact line
             compact_pairs = [
-                f"{json.dumps(k)}: {self._format(v, 0)}" for k, v in obj.items()
+                f"{json.dumps(k, ensure_ascii=False)}: {self._format(v, 0)}" for k, v in sorted_items
             ]
             compact_repr = "{ " + ", ".join(compact_pairs) + " }"
 
@@ -62,8 +64,8 @@ class SmartJSONEncoder:
 
             # If too long, format with newlines
             expanded_pairs = []
-            for k, v in obj.items():
-                key_str = json.dumps(k)
+            for k, v in sorted_items:
+                key_str = json.dumps(k, ensure_ascii=False)
                 val_str = self._format(v, level + 1)
                 expanded_pairs.append(f"{next_indent_str}{key_str}: {val_str}")
 
@@ -71,7 +73,7 @@ class SmartJSONEncoder:
             return f"{{\n{body}\n{current_indent_str}}}"
 
         # Fallback for unexpected types (dates, etc) -> stringify them
-        return json.dumps(str(obj))
+        return json.dumps(str(obj), ensure_ascii=False)
 
 
 # --- HELPER TO PREVENT CRASHES ---
