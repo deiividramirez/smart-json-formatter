@@ -2,7 +2,7 @@
   "name": "smart-json-formatter",
   "displayName": "Smart JSON Formatter",
   "description": "Fractal JSON formatting: Compacts simple lists, expands complex objects.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "publisher": "deiividramirez",
   "icon": "icon.png",
   "engines": {
