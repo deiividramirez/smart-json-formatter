@@ -21,6 +21,10 @@ It optimizes for **readability** and **information density**.
 
 ## ↔️ Comparison
 
+<p align="center">
+  <img src="explain.jpg" alt="Before and after comparison" width="720"/>
+</p>
+
 ### Standard Formatter (Prettier / VS Code Default)
 *Wastes space on simple data.*
 
@@ -40,16 +44,17 @@ It optimizes for **readability** and **information density**.
   ]
 }
 ```
-Smart JSON Formatter
 
-Compact, readable, and lightweight.
+### Smart JSON Formatter
+
+Compact, readable, and lightweight. Keys sorted alphabetically.
 
 ```json
 {
+  "flags": ["enabled", "visible", "locked"],
   "id": 1,
   "name": "Camera Settings",
-  "position": [12.5, 45.2, 0.0],
-  "flags": ["enabled", "visible", "locked"]
+  "position": [12.5, 45.2, 0.0]
 }
 ```
 
