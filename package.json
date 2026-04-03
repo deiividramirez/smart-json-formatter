@@ -2,8 +2,8 @@
   "name": "smart-json-formatter",
   "displayName": "Smart JSON Formatter",
   "description": "Fractal JSON formatting: Compacts simple lists, expands complex objects.",
-  "version": "1.0.0",
-  "publisher": "deiividramirez",  
+  "version": "1.0.1",
+  "publisher": "deiividramirez",
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.108.0"
@@ -19,7 +19,9 @@
     "languages": [
       {
         "id": "json",
-        "extensions": [".json"]
+        "extensions": [
+          ".json"
+        ]
       }
     ]
   },
