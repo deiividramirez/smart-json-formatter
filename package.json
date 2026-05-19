@@ -1,6 +1,11 @@
 {
-  "activationEvents": ["onLanguage:json", "onLanguage:jsonc"],
-  "categories": ["Formatters"],
+  "activationEvents": [
+    "onLanguage:json",
+    "onLanguage:jsonc"
+  ],
+  "categories": [
+    "Formatters"
+  ],
   "contributes": {
     "configuration": {
       "properties": {
@@ -17,7 +22,11 @@
           "minimum": 40,
           "type": "number"
         },
-        "smartJsonFormatter.sortKeysAlphabetically": { "default": true, "description": "Sort object keys alphabetically when formatting.", "type": "boolean" },
+        "smartJsonFormatter.sortKeysAlphabetically": {
+          "default": true,
+          "description": "Sort object keys alphabetically when formatting.",
+          "type": "boolean"
+        },
         "smartJsonFormatter.stripComments": {
           "default": true,
           "description": "Strip // and /* */ comments before parsing. When false, a file with comments will produce an error instead of silently removing them.",
@@ -26,7 +35,14 @@
       },
       "title": "Smart JSON Formatter"
     },
-    "languages": [{ "extensions": [".json"], "id": "json" }]
+    "languages": [
+      {
+        "extensions": [
+          ".json"
+        ],
+        "id": "json"
+      }
+    ]
   },
   "description": "Fractal JSON formatting: Compacts simple lists, expands complex objects.",
   "devDependencies": {
@@ -42,12 +58,17 @@
     "typescript-eslint": "^8.52.0"
   },
   "displayName": "Smart JSON Formatter",
-  "engines": { "vscode": "^1.90.0" },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
   "icon": "icon.png",
   "main": "./dist/extension.js",
   "name": "smart-json-formatter",
   "publisher": "deiividramirez",
-  "repository": { "type": "git", "url": "https://github.com/deiividramirez/smart-json-formatter" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deiividramirez/smart-json-formatter"
+  },
   "scripts": {
     "check-types": "tsc --noEmit",
     "compile": "npm run check-types && npm run lint && node esbuild.js",
@@ -62,5 +83,5 @@
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json"
   },
-  "version": "1.0.6"
+  "version": "1.0.7"
 }
