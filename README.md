@@ -10,6 +10,8 @@ Smart JSON Formatter is a "fractal" JSON formatter for VS Code and compatible ID
 
 It optimizes for both **readability** and **information density**.
 
+👉 **[Try the Live Interactive Demo!](https://deiividramirez.github.io/smart-json-formatter/)**
+
 ---
 
 ## 🚀 Features
