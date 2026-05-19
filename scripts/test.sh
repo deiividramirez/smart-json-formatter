@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PYTHON="${ROOT}/python/smart_json.py"
+FORMATTER_CLI="${ROOT}/scripts/run-formatter.js"
 
 # --- Colors ---
 RED='\033[0;31m'
@@ -18,8 +18,8 @@ pass() { echo -e "  ${GREEN}✓${NC} $1"; PASS=$((PASS + 1)); }
 fail() { echo -e "  ${RED}✗${NC} $1"; FAIL=$((FAIL + 1)); }
 section() { echo -e "\n${BOLD}$1${NC}"; }
 
-# Run the python formatter with the same defaults the VS Code extension uses
-fmt() { echo "$1" | python3 "$PYTHON" --sort-keys --strip-comments; }
+# Run the typescript formatter with the same defaults the VS Code extension uses
+fmt() { echo "$1" | node "$FORMATTER_CLI" --sort-keys --strip-comments; }
 
 # Assert formatted output equals expected (ignoring leading/trailing whitespace)
 assert_eq() {
@@ -57,7 +57,7 @@ assert_contains() {
 assert_fails() {
   local description="$1"
   local input="$2"
-  if echo "$input" | python3 "$PYTHON" >/dev/null 2>&1; then
+  if echo "$input" | node "$FORMATTER_CLI" >/dev/null 2>&1; then
     fail "$description (expected failure but it succeeded)"
   else
     pass "$description"
@@ -65,14 +65,8 @@ assert_fails() {
 }
 
 # ============================================================
-section "1. Environment"
+# section "1. Environment"
 # ============================================================
-
-if command -v python3 &>/dev/null; then
-  pass "python3 found ($(python3 --version))"
-else
-  fail "python3 not found — install Python 3 and add it to PATH"
-fi
 
 if command -v node &>/dev/null; then
   pass "node found ($(node --version))"
@@ -86,10 +80,10 @@ else
   fail "npm not found"
 fi
 
-if [[ -f "${ROOT}/python/smart_json.py" ]]; then
-  pass "python/smart_json.py exists"
+if [[ -f "$FORMATTER_CLI" ]]; then
+  pass "scripts/run-formatter.js exists"
 else
-  fail "python/smart_json.py is missing"
+  fail "scripts/run-formatter.js is missing"
 fi
 
 if [[ -f "${ROOT}/package.json" ]]; then
@@ -105,15 +99,15 @@ else
 fi
 
 # ============================================================
-section "2. TypeScript — type check"
+section "2. TypeScript — compile"
 # ============================================================
 
-if cd "$ROOT" && npm run check-types --silent 2>&1 | grep -q "error TS"; then
-  fail "TypeScript type errors found"
-elif cd "$ROOT" && npm run check-types --silent 2>/dev/null; then
-  pass "No TypeScript errors"
+if cd "$ROOT" && npm run compile-tests --silent 2>&1 | grep -q "error TS"; then
+  fail "TypeScript compilation errors found"
+elif cd "$ROOT" && npm run compile-tests --silent 2>/dev/null; then
+  pass "TypeScript compiled successfully"
 else
-  fail "TypeScript check failed unexpectedly"
+  fail "TypeScript compilation failed unexpectedly"
 fi
 
 # ============================================================

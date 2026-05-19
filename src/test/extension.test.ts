@@ -1,14 +1,10 @@
 import * as assert from 'assert';
-import * as cp from 'child_process';
-import * as path from 'path';
 import * as vscode from 'vscode';
+import { formatText } from '../formatter';
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-
-const PYTHON = process.platform === 'win32' ? 'python' : 'python3';
-const SCRIPT = path.join(__dirname, '..', '..', 'python', 'smart_json.py');
 
 interface RunResult {
     stdout: string;
@@ -17,15 +13,37 @@ interface RunResult {
 }
 
 function run(input: string, args: string[] = []): RunResult {
-    const result = cp.spawnSync(PYTHON, [SCRIPT, ...args], {
-        input,
-        encoding: 'utf-8',
-    });
-    return {
-        stdout: result.stdout ?? '',
-        stderr: result.stderr ?? '',
-        status: result.status,
-    };
+    let maxWidth = 120;
+    let indent = 2;
+    let sortKeys = false;
+    let stripComments = false;
+
+    for (let i = 0; i < args.length; i++) {
+        if (args[i] === '--max-width') {
+            maxWidth = parseInt(args[++i], 10);
+        } else if (args[i] === '--indent') {
+            indent = parseInt(args[++i], 10);
+        } else if (args[i] === '--sort-keys') {
+            sortKeys = true;
+        } else if (args[i] === '--strip-comments') {
+            stripComments = true;
+        }
+    }
+
+    try {
+        const stdout = formatText(input, { indent, maxWidth, sortKeys, stripComments });
+        return {
+            stdout,
+            stderr: '',
+            status: 0,
+        };
+    } catch (err: any) {
+        return {
+            stdout: '',
+            stderr: err.message ?? '',
+            status: 1,
+        };
+    }
 }
 
 function parsed(input: string, args: string[] = []): unknown {
